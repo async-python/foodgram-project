@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Title text {% endblock %}
+
+{% block static %}
+    <link rel="stylesheet" href="{% static 'pages/form.css' %}">
+{% endblock %}
+
+{% block header %} Header text {% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <form class="form" method="post">
+            {% block info %}{% endblock %}
+            {% csrf_token %}
+            {% include "includes/users_form_fields.html" %}
+            <div class="form__footer">
+                <button class="button button_style_blue" type="submit">{% block button %} Button text {% endblock %}</button>
+                {% block href %}{% endblock %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
