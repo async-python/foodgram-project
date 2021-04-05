@@ -1,10 +1,8 @@
 from django.urls import path
-
-from . import views
-
+from .views import IndexView
 
 urlpatterns = [
-    # path("", views.index, name="index"),
+    path("", IndexView.as_view(), name="index"),
     # path("feed/", views.feed, name="feed"),
     # path("new/", views.new_recipe, name="new"),
     # path("favorites/", views.favorites, name="favorites"),
