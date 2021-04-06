@@ -45,7 +45,7 @@ class Recipe(models.Model):
         Ingredient,
         through='RecipeIngredient'
     )
-    slug = models.SlugField(unique=True)
+    # slug = models.SlugField(unique=True, null=True)
     tag = models.ManyToManyField(
         Tag,
         related_name='recipe_tag',

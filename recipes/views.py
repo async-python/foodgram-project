@@ -9,6 +9,8 @@ from recipes.models import Recipe
 class IndexView(ListView):
     model = Recipe
     template_name = 'index.html'
+    context_object_name = "recipe_list"
+    paginate_by = 9
 
     def get_context_data(self, *, object_list=None, **kwargs):
         return super().get_context_data(object_list=object_list, **kwargs)
