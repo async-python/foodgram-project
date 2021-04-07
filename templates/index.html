@@ -28,7 +28,7 @@
                     {% include "includes/recipe_card.html" with recipe=recipe %}
                 {% endfor %}
             {% else %}
-                <p>Recipes not found!!! :(</p>
+                <p class="custom-text-block">Рецептов еще нет, вы можете стать первым автором :)</p>
             {% endif %}
         </div>
         {% if page_obj.has_other_pages %}
