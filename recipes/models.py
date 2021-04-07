@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import UniqueConstraint
@@ -37,8 +38,8 @@ class Recipe(models.Model):
         db_index=True
     )
     description = models.TextField(verbose_name='recipe description')
-    cooking_time = models.IntegerField()
-    image = models.ImageField(upload_to='recipe')
+    cooking_time = models.PositiveIntegerField()
+    image = models.ImageField(upload_to=settings.MEDIA_ROOT)
     created = models.DateTimeField(verbose_name='time publication',
                                    auto_now=True)
     ingredients = models.ManyToManyField(
@@ -46,10 +47,7 @@ class Recipe(models.Model):
         through='RecipeIngredient'
     )
     # slug = models.SlugField(unique=True, null=True)
-    tag = models.ManyToManyField(
-        Tag,
-        related_name='recipe_tag',
-    )
+    tag = models.ManyToManyField(Tag, related_name='recipe_tag',)
 
     class Meta:
         ordering = ['-created']
