@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import IndexView, RecipeView
+from .views import IndexView, RecipeView, RecipeCreateView
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     # path("feed/", views.feed, name="feed"),
-    # path("new/", views.new_recipe, name="new"),
+    path("new/", RecipeCreateView.as_view(), name="new"),
     # path("favorites/", views.favorites, name="favorites"),
     # path("wishlist/", views.wishlist, name="wishlist"),
     # path("<username>/", views.user_page, name="user"),

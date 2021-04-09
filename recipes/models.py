@@ -43,10 +43,9 @@ class Recipe(models.Model):
                                    auto_now=True)
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='RecipeIngredient'
+        through='RecipeIngredient', null=True,
     )
-    # slug = models.SlugField(unique=True, null=True)
-    tag = models.ManyToManyField(Tag, related_name='recipe_tag',)
+    tag = models.ManyToManyField(Tag, related_name='recipe_tag', null=True,)
 
     class Meta:
         ordering = ['-created']
