@@ -5,13 +5,13 @@ const header = new Header(counterId);
 const configButton = {
     subscribe: {
         attr: 'data-out',
-        default: {
-            class: 'button_style_blue',
-            text: 'Отписаться'
-        },
         active: {
             class: 'button_style_blue',
             text: `Подписаться на автора`
+        },
+        default: {
+            class: 'button_style_blue',
+            text: 'Отписаться'
         }
     }
 }
@@ -20,4 +20,3 @@ const myFollow = new MyFollow(container, '.card-user', header, api, true,{
     subscribe
 })
 myFollow.addEvent();
-

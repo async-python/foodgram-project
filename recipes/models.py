@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.core.validators import MinValueValidator
 
 User = get_user_model()
 
@@ -37,15 +38,20 @@ class Recipe(models.Model):
         db_index=True
     )
     description = models.TextField(verbose_name='recipe description')
-    cooking_time = models.PositiveIntegerField()
+    cooking_time = models.PositiveIntegerField(
+        validators=(
+            MinValueValidator(0, message='Значение должно быть больше 0'),
+        )
+    )
     image = models.ImageField(upload_to='recipes/')
     created = models.DateTimeField(verbose_name='time publication',
                                    auto_now=True)
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='RecipeIngredient', null=True,
+        through='RecipeIngredient',
+        through_fields=('recipe', 'ingredient')
     )
-    tag = models.ManyToManyField(Tag, related_name='recipe_tag', null=True,)
+    tag = models.ManyToManyField(Tag, related_name='recipe_tag', )
 
     class Meta:
         ordering = ['-created']

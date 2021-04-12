@@ -32,19 +32,19 @@ class RecipeView(DetailView):
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     template_name = 'formRecipe.html'
-    # context_object_name = 'recipe_create'
     form_class = RecipeForm
     success_url = 'index'
 
     def form_valid(self, form):
         form_obj = form.save(commit=False)
-        form_obj['author'] = self.request.user
+        form_obj.author = self.request.user
         form_obj.save()
-        return redirect('index')
+        return redirect(self.success_url)
 
-    def form_invalid(self, form):
-        return render(self.request, 'formRecipe.html',
-                      {'form': form, })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tags'] = Tag.objects.all()
+        return context
 
 
 def page_not_found(request, exception):

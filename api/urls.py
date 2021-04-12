@@ -1,9 +1,17 @@
+from django.urls import path, include
 from django.urls import path
+from rest_framework.routers import DefaultRouter
+from .views import IngredientsViewSet
 
-from . import views
 
+router = DefaultRouter()
+router.register(r'ingredients', IngredientsViewSet, basename='get_ingredients')
 
 urlpatterns = [
+    path('', include(router.urls)),
+]
+
+# urlpatterns = [
     # path("add_favorite",
     #      views.add_favorite, name="add_favorite"),
     # path("remove_favorite/<int:recipe_id>",
@@ -19,7 +27,7 @@ urlpatterns = [
     # path("<username>/<recipe_id>/remove/",
     #      views.remove_recipe, name="remove_recipe"),
     # path("ingredients/",
-    #      views.get_ingredients, name="get_ingredients"),
+    #      IngredientsViewSet.as_view({'get': 'list'}), name="get_ingredients"),
     # path("print_wishlist/",
     #      views.get_wishlist, name="get_wishlist"),
-]
+# ]

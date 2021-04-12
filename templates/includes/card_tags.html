@@ -1,11 +1,3 @@
 {% for tag in tags %}
-    {% if tag.slug == "Lunch" %}
-        <li class="card__item"><span class="badge badge_style_green">{{ tag.name }}</span></li>
-    {% endif %}
-    {% if tag.slug == "Breakfast" %}
-        <li class="card__item"><span class="badge badge_style_orange">{{ tag.name }}</span></li>
-    {% endif %}
-    {% if tag.slug == "Dinner" %}
-        <li class="card__item"><span class="badge badge_style_purple">{{ tag.name }}</span></li>
-    {% endif %}
+    <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
 {% endfor %}
