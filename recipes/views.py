@@ -43,7 +43,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tags'] = Tag.objects.all()
+        context['all_tags'] = Tag.objects.all()
         return context
 
 
