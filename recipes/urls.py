@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, RecipeView, RecipeCreateView
+from .views import IndexView, RecipeView, RecipeCreateView, RecipeUpdateView
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
@@ -10,6 +10,6 @@ urlpatterns = [
     # path("<username>/", views.user_page, name="user"),
     path("<str:username>/<int:recipe_id>/", RecipeView.as_view(),
          name="recipe"),
-    # path("<username>/<recipe_id>/edit/", views.edit_recipe,
-    #      name="edit_recipe")
+    path("<str:username>/<int:recipe_id>/edit/", RecipeUpdateView.as_view(),
+         name="edit_recipe")
 ]

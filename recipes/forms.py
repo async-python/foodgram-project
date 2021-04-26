@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
+from django.core.exceptions import ValidationError
 from recipes.models import Recipe, Tag
 
 
@@ -13,5 +14,5 @@ class RecipeForm(forms.ModelForm):
         model = Recipe
         fields = ('name', 'tag', 'cooking_time', 'description', 'image',)
         widgets = {
-            'tag': CheckboxSelectMultiple,
+            'tag': CheckboxSelectMultiple(),
         }
