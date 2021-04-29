@@ -1,12 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView
+    ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-
 from recipes.forms import RecipeForm
 from recipes.models import Recipe, Tag, User
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from recipes.permissions import AuthorPermissionMixin
 
 
 class IndexView(ListView):
@@ -17,12 +17,10 @@ class IndexView(ListView):
 
 
 class RecipeView(DetailView):
+    model = Recipe
     template_name = 'singlePage.html'
-    context_object_name = 'single_recipe'
-
-    def get_object(self, queryset=None):
-        author = get_object_or_404(User, username=self.kwargs['username'])
-        return get_object_or_404(author.recipes, id=self.kwargs['recipe_id'])
+    pk_url_kwarg = 'recipe_id'
+    query_pk_and_slug = ('recipe_id', 'username')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -34,23 +32,23 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     template_name = 'formRecipe.html'
     form_class = RecipeForm
-    success_url = 'index'
+    success_url = reverse_lazy('index')
 
     def form_valid(self, form):
         form_obj = form.save(commit=False)
         form_obj.author = self.request.user
         form_obj.save()
         form.save_m2m()
-        return redirect(self.success_url)
+        return super(RecipeCreateView, self).form_valid(form)
 
 
-class RecipeUpdateView(LoginRequiredMixin, UpdateView):
+class RecipeUpdateView(LoginRequiredMixin,
+                       AuthorPermissionMixin, UpdateView):
+    model = Recipe
     template_name = 'formRecipe.html'
     form_class = RecipeForm
-
-    def get_object(self, queryset=None):
-        author = get_object_or_404(User, username=self.kwargs['username'])
-        return get_object_or_404(author.recipes, id=self.kwargs['recipe_id'])
+    pk_url_kwarg = 'recipe_id'
+    query_pk_and_slug = ('recipe_id', 'username')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,6 +61,15 @@ class RecipeUpdateView(LoginRequiredMixin, UpdateView):
             kwargs={'recipe_id': self.kwargs['recipe_id'],
                     'username': self.kwargs['username']}
         )
+
+
+class RecipeDeleteView(LoginRequiredMixin,
+                       AuthorPermissionMixin, DeleteView):
+    template_name = 'recipe_confirm_delete.html'
+    model = Recipe
+    pk_url_kwarg = 'recipe_id'
+    query_pk_and_slug = ('recipe_id', 'username')
+    success_url = reverse_lazy('index')
 
 
 def page_not_found(request, exception):

@@ -70,15 +70,16 @@
             <div class="form__group">
                 <span class="form__label">Загрузить фото</span>
                 <div class="form__field-group">
-                    {{ form.image|addclass:"form__textarea" }}
+                    {{ form.image|addclass:"form__file-button" }}
                     <span class="form__error">{{ form.image.errors }}</span>
                 </div>
             </div>
             <div class="form__footer">
                 {% if update_recipe %}
-                <button class="button button_style_blue">Сохранить</button> <a style="margin-left: 2.5em" href="#" class="form__ingredient-link">Удалить</a>
+                    <button class="button button_style_blue">Сохранить</button>
+                    <a style="margin-left: 2.5em" href="{% url 'delete_recipe' recipe.author.username recipe.id %}" class="form__ingredient-link">Удалить</a>
                 {% else %}
-                <button class="button button_style_blue" type="submit">Создать рецепт</button>
+                    <button class="button button_style_blue" type="submit">Создать рецепт</button>
                 {% endif %}
             </div>
         </form>

@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import IndexView, RecipeView, RecipeCreateView, RecipeUpdateView
+from .views import (
+    IndexView, RecipeView, RecipeCreateView, RecipeUpdateView,
+    RecipeDeleteView)
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
@@ -11,5 +13,7 @@ urlpatterns = [
     path("<str:username>/<int:recipe_id>/", RecipeView.as_view(),
          name="recipe"),
     path("<str:username>/<int:recipe_id>/edit/", RecipeUpdateView.as_view(),
-         name="edit_recipe")
+         name="edit_recipe"),
+    path("<str:username>/<int:recipe_id>/delete/", RecipeDeleteView.as_view(),
+         name="delete_recipe")
 ]

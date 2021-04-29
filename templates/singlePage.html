@@ -5,24 +5,24 @@
 {% endblock %}
 {% block content %}
         <div class="single-card" data-id="371" data-author="12">
-            <img src="{{ single_recipe.image.url }}" alt="какой-то текст" class="single-card__image">
+            <img src="{{ recipe.image.url }}" alt="какой-то текст" class="single-card__image">
             <div class="single-card__info">
                 <div class="single-card__header-info">
-                    <h1 class="single-card__title">{{ single_recipe.name }}</h1>
+                    <h1 class="single-card__title">{{ recipe.name }}</h1>
                     <div class="single-card__favorite">
                         <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button>
                         <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
                     </div>
                 </div>
                 <ul class="single-card__items">
-                    {% include 'includes/card_tags.html' with tags=single_recipe.tag.all %}
+                    {% include 'includes/card_tags.html' with tags=recipe.tag.all %}
                 </ul>
                 <div class="single-card__items single-card__items_column">
-                    <p class="single-card__text"><span class="icon-time"></span> {{ single_recipe.cooking_time }} мин.</p>
+                    <p class="single-card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
                     <ul class="single-card__items">
-                        <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> {{ single_recipe.author.first_name }} {{ single_recipe.author.last_name }}</p></li>
-                        {% if user == single_recipe.author %}
-                            <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'edit_recipe' single_recipe.author.username single_recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
+                        <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> {{ recipe.author.first_name }} {{ recipe.author.last_name }}</p></li>
+                        {% if user == recipe.author %}
+                            <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'edit_recipe' recipe.author.username recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Описание:</h3>
-                    <p class=" single-card__section-text">{{ single_recipe.description|linebreaksbr }}</p>
+                    <p class=" single-card__section-text">{{ recipe.description|linebreaksbr }}</p>
                 </div>
             </div>
         </div>
