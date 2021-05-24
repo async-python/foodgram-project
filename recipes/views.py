@@ -35,11 +35,8 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('index')
 
     def form_valid(self, form):
-        form_obj = form.save(commit=False)
-        form_obj.author = self.request.user
-        form_obj.save()
-        form.save_m2m()
-        return super(RecipeCreateView, self).form_valid(form)
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class RecipeUpdateView(LoginRequiredMixin,

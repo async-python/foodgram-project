@@ -55,7 +55,7 @@ function Ingredients() {
             const item = e.target.closest('.form__field-item-ingredient');
             item.removeEventListener('click',eventDelete);
             item.remove()
-        };
+        }
     };
     ingredientsContainer.addEventListener('click', eventDelete);
     // получение данных из инпутов для добавления
