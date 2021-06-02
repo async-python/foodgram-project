@@ -1,0 +1,33 @@
+{% load static %}
+<form method="post">
+    <div class="card-user" data-author="{{ authors.author.pk }}">
+        <div class="card-user__header">
+            <h2 class="card-user__title">{{ authors.author.first_name }} {{ authors.author.last_name }}</h2>
+        </div>
+        <div class="card-user__body">
+            <ul class="card-user__items">
+                {% for recipe in authors.author.recipes.all|slice:':3' %}
+                <li class="card-user__item">
+                    <div class="recipe">
+                        <img src="{{ recipe.image.url }}" alt="какой-то-текст" class="recipe__image">
+                        <h3 class="recipe__title">{{ recipe.name }}</h3>
+                        <p class="recipe__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
+                    </div>
+                </li>
+                {% endfor %}
+                <li class="card-user__item">
+                    <a href="{% url 'user' username=authors.author %}" class="card-user__link link">
+                    {% if author_card.author.recipes.count > 3 %}
+                        Еще рецептов: {{ authors.author.recipes.count|add:'-3' }}
+                    {% else %}
+                        На страницу автора
+                    {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-user__footer">
+            <button class="button button_style_light-blue button_size_auto" href="{% url 'index' %}" name="subscribe">Отписаться</button>
+        </div>
+    </div>
+</form>

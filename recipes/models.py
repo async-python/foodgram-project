@@ -96,8 +96,7 @@ class SubscriptionsUsers(models.Model):
     )
 
     class Meta:
-        UniqueConstraint(fields=['user', 'author'],
-                         name='unique_Subscriptions')
+        unique_together = ('user', 'author')
 
     def __str__(self):
         return f'User: {self.user}, author: {self.author}'
@@ -122,8 +121,7 @@ class FavoritesRecipes(models.Model):
     )
 
     class Meta:
-        UniqueConstraint(fields=['user', 'favorites'],
-                         name='unique_favorites_recipes')
+        unique_together = ('user', 'favorites')
 
     def __str__(self):
         return f'User: {self.user}, favorite recipe: {self.favorites.name}'
@@ -141,8 +139,7 @@ class ShoppingList(models.Model):
     )
 
     class Meta:
-        UniqueConstraint(fields=['user', 'recipe'],
-                         name='unique_shopping_list')
+        unique_together = ('user', 'recipe')
 
     def __str__(self):
         return f'User: {self.user}, recipe_id: {self.recipe.id}'

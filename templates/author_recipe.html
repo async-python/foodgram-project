@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'pages/index.css' %}">
+{% endblock %}
+{% block header %} {{ recipe_author.first_name }} {{ recipe_author.last_name }}{% endblock %}
+{% block tags %}
+    <ul class="tags">
+        <li class="tags__item">
+            <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="#"></a>
+            <span class="tags__label">Завтрак</span>
+        </li>
+        <li class="tags__item">
+            <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="#"></a>
+            <span for="lunch" class="tags__label">Обед</span>
+        </li>
+        <li class="tags__item">
+            <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="#"></a>
+            <label for="dinner" class="tags__label">Ужин</label>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+        <div class="card-list">
+            {% if recipe_list %}
+                {% for recipe in recipe_list %}
+                    {% include "includes/recipe_card.html" with recipe=recipe %}
+                {% endfor %}
+            {% else %}
+                <p class="custom-text-block">Рецептов еще нет, вы можете стать первым автором :)</p>
+            {% endif %}
+        </div>
+        {% if page_obj.has_other_pages %}
+            {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
+        {% endif %}
+{% endblock %}
+{% block script %}
+    {% csrf_token %}
+    <script src="{% static 'js/components/MainCards.js' %}"></script>
+    <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static '/js/components/Favorites.js' %}"></script>
+    <script src="{% static '/js/components/Subscribe.js' %}"></script>
+    <script src="{% static 'js/config/config.js' %}"></script>
+    <script src="{% static '/js/components/AuthorRecipe.js' %}"></script>
+    <script src="{% static 'js/components/Header.js' %}"></script>
+    <script src="{% static 'js/api/Api.js' %}"></script>
+    <script src="{% static 'authorRecipe.js' %}"></script>
+{% endblock %}

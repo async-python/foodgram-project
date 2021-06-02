@@ -4,7 +4,7 @@
    <link rel="stylesheet" href="{% static 'pages/single.css' %}">
 {% endblock %}
 {% block content %}
-        <div class="single-card" data-id="371" data-author="12">
+        <div class="single-card" data-id="371" data-author="{{ recipe.author_id }}">
             <img src="{{ recipe.image.url }}" alt="какой-то текст" class="single-card__image">
             <div class="single-card__info">
                 <div class="single-card__header-info">

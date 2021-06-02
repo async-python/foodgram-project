@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'pages/myFollow.css' %}">
+{% endblock %}
+{% block header %} Мои подписки {% endblock %}
+
+{% block content %}
+        <div class="card-list">
+            {% if subscriptions %}
+                {% for authors in subscriptions %}
+                    {% include "includes/author_card.html" with authors=authors %}
+                {% endfor %}
+            {% else %}
+                <p class="custom-text-block">У вас еще нед подписок на других авторов</p>
+            {% endif %}
+        </div>
+        {% if page_obj.has_other_pages %}
+            {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
+        {% endif %}
+{% endblock %}
+
+{% block script %}
+    {% csrf_token %}
+    <script src="{% static '/js/config/config.js' %}"></script>
+    <script src="{% static '/js/components/MainCards.js' %}"></script>
+    <script src="{% static '/js/components/MyFollow.js' %}"></script>
+    <script src="{% static '/js/components/Subscribe.js' %}"></script>
+    <script src="{% static '/js/components/Header.js' %}"></script>
+    <script src="{% static '/js/api/Api.js' %}"></script>
+    <script src="{% static 'myFollow.js' %}"></script>
+{% endblock %}

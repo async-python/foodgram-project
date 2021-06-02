@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
-from django.core.exceptions import ValidationError
 from recipes.models import Recipe, Tag, RecipeIngredient, Ingredient
+from django.db import transaction
 
 
 class RecipeForm(forms.ModelForm):
@@ -43,17 +43,20 @@ class RecipeForm(forms.ModelForm):
         super().__init__(data, *args, **kwargs)
 
     def save(self, commit=True):
-        recipe_obj = super().save(commit=False)
-        recipe_obj.save()
-        recipe_obj.recipe_ingredients.all().delete()
-        ingredients_amount = self.amount
-        recipe_obj.recipe_ingredients.set(
-            [
-                RecipeIngredient(recipe=recipe_obj, ingredient=ingredient,
-                                 amount=ingredients_amount[ingredient.title])
-                for ingredient in self.cleaned_data['ingredients']
-            ],
-            bulk=False)
-        self.amount = []
-        self.save_m2m()
-        return recipe_obj
+        with transaction.atomic():
+            recipe_obj = super().save(commit=False)
+            recipe_obj.save()
+            recipe_obj.recipe_ingredients.all().delete()
+            ingredients_amount = self.amount
+            recipe_obj.recipe_ingredients.set(
+                [
+                    RecipeIngredient(
+                        recipe=recipe_obj, ingredient=ingredient,
+                        amount=ingredients_amount[ingredient.title]
+                    )
+                    for ingredient in self.cleaned_data['ingredients']
+                ],
+                bulk=False)
+            self.amount = {}
+            self.save_m2m()
+            return recipe_obj

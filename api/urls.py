@@ -1,13 +1,24 @@
 from django.urls import path, include
-from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import IngredientsViewSet
-
+from .views import IngredientsViewSet, SubscribeCreateDeleteView
 
 router = DefaultRouter()
-router.register(r'ingredients', IngredientsViewSet, basename='get_ingredients')
+router.register(r'ingredients', IngredientsViewSet)
+router.register(
+    r'subscriptions', SubscribeCreateDeleteView, basename='unsubscribe', )
+# router.register(
+#     r'subscriptions/(?P<author_id>[0-9]+)',
+#     UnSubscribeView, basename='unsubscribe')
 
 urlpatterns = [
+    # path('subscriptions/<int:author_id>',
+    #      UnSubscribeView.as_view(),
+    #      name='remove_subscription'),
+    # path('subscriptions/<int:author_id>',
+    #      UnSubscribeView.as_view({'delete': 'destroy'}),
+    #      name='remove_subscription'),
+    # path('subscriptions/<int:author_id>',
+    #      unfollowing, name='remove_subscription'),
     path('', include(router.urls)),
 ]
 

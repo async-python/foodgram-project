@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Recipe, Tag, RecipeIngredient
+from .models import Recipe, Tag, RecipeIngredient, SubscriptionsUsers
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -10,9 +10,6 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'author')
     list_filter = ('created',)
     empty_value_display = '-пусто-'
-
-    # def show_ingredients(self, obj):
-    #     return '\n'.join([a.ingredient for a in obj.recipe_ingredients.all()])
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -27,6 +24,11 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
     list_filter = ('recipe', 'ingredient',)
 
 
+class SubscriptionsUsersAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'author',)
+
+
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
+admin.site.register(SubscriptionsUsers, SubscriptionsUsersAdmin)
