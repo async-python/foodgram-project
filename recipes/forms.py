@@ -7,7 +7,7 @@ from django.db import transaction
 class RecipeForm(forms.ModelForm):
     tag = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
-        to_field_name="slug",
+        to_field_name='slug',
     )
     ingredients = forms.ModelMultipleChoiceField(
         queryset=Ingredient.objects.all(),

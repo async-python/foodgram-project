@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Recipe, Tag, RecipeIngredient, SubscriptionsUsers
+from .models import Recipe, Tag, RecipeIngredient, SubscriptionUser
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -31,4 +31,4 @@ class SubscriptionsUsersAdmin(admin.ModelAdmin):
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
-admin.site.register(SubscriptionsUsers, SubscriptionsUsersAdmin)
+admin.site.register(SubscriptionUser, SubscriptionsUsersAdmin)

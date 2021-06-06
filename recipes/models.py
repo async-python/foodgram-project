@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import UniqueConstraint
 from django.core.validators import MinValueValidator
 
 User = get_user_model()
@@ -60,7 +59,7 @@ class Recipe(models.Model):
         return f'Recipe name: {self.name}, author: {self.author}'
 
     def is_favorite(self, user_id):
-        response = FavoritesRecipes.objects.filter(
+        response = FavoriteRecipe.objects.filter(
             user=user_id, favorites=self.id
         ).exists()
         return response
@@ -84,7 +83,7 @@ class RecipeIngredient(models.Model):
     amount = models.IntegerField()
 
 
-class SubscriptionsUsers(models.Model):
+class SubscriptionUser(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -102,7 +101,7 @@ class SubscriptionsUsers(models.Model):
         return f'User: {self.user}, author: {self.author}'
 
     def is_following(self, author_id):
-        response = SubscriptionsUsers.objects.select_related(
+        response = SubscriptionUser.objects.select_related(
             'user', 'author'
         ).filter(
             user=self.id, author=author_id
@@ -110,21 +109,17 @@ class SubscriptionsUsers(models.Model):
         return response
 
 
-class FavoritesRecipes(models.Model):
-    favorites = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-    )
+class FavoriteRecipe(models.Model):
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name='favorite_recipe')
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-    )
+        User, on_delete=models.CASCADE, related_name='favorite_user')
 
     class Meta:
-        unique_together = ('user', 'favorites')
+        unique_together = ('user', 'recipe')
 
     def __str__(self):
-        return f'User: {self.user}, favorite recipe: {self.favorites.name}'
+        return f'User: {self.user}, favorite recipe: {self.recipe.name}'
 
 
 class ShoppingList(models.Model):

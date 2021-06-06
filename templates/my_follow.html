@@ -12,7 +12,7 @@
                     {% include "includes/author_card.html" with authors=authors %}
                 {% endfor %}
             {% else %}
-                <p class="custom-text-block">У вас еще нед подписок на других авторов</p>
+                <h4 class="custom-text-block">У вас еще нет подписок на других авторов :(</h4>
             {% endif %}
         </div>
         {% if page_obj.has_other_pages %}

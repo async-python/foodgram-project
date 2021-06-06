@@ -1,22 +1,29 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView
-)
+    ListView, DetailView, CreateView, UpdateView, DeleteView)
 from recipes.forms import RecipeForm
-from recipes.models import Recipe, Tag, User, SubscriptionsUsers
+from recipes.models import Recipe, User, SubscriptionUser, ShoppingList, Tag
 from django.urls import reverse, reverse_lazy
 from recipes.permissions import AuthorPermissionMixin
-from django.db.models import Q, Count
+from django.db.models import Count
 
 paginate_count = 3
 
 
 class IndexView(ListView):
-    model = Recipe
     template_name = 'index.html'
     context_object_name = 'recipe_list'
     paginate_by = paginate_count
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['index_page'] = True
+        return context
+
+    def get_queryset(self):
+        return Recipe.objects.select_related(
+            'author').prefetch_related('tag').all()
 
 
 class RecipeView(DetailView):
@@ -37,22 +44,31 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     form_class = RecipeForm
     success_url = reverse_lazy('index')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['create_recipe'] = True
+        context['tags'] = Tag.objects.all()
+        return context
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class RecipeUpdateView(LoginRequiredMixin,
-                       AuthorPermissionMixin, UpdateView):
-    model = Recipe
+class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'form_recipe.html'
     form_class = RecipeForm
     pk_url_kwarg = 'recipe_id'
     query_pk_and_slug = ('recipe_id', 'username')
 
+    def get_queryset(self):
+        return Recipe.objects.select_related(
+            'author').prefetch_related('tag').filter(author=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['update_recipe'] = True
+        context['tags'] = Tag.objects.all()
         return context
 
     def get_success_url(self):
@@ -63,8 +79,7 @@ class RecipeUpdateView(LoginRequiredMixin,
         )
 
 
-class RecipeDeleteView(LoginRequiredMixin,
-                       AuthorPermissionMixin, DeleteView):
+class RecipeDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'recipe_confirm_delete.html'
     model = Recipe
     pk_url_kwarg = 'recipe_id'
@@ -72,7 +87,7 @@ class RecipeDeleteView(LoginRequiredMixin,
     success_url = reverse_lazy('index')
 
 
-class UserRecipeList(ListView):
+class UserRecipeList(LoginRequiredMixin, ListView):
     template_name = 'author_recipe.html'
     context_object_name = 'recipe_list'
     paginate_by = paginate_count
@@ -88,18 +103,37 @@ class UserRecipeList(ListView):
         return context
 
 
-class UserFollowList(ListView):
+class UserFollowList(LoginRequiredMixin, ListView):
     template_name = 'my_follow.html'
     context_object_name = 'subscriptions'
     paginate_by = paginate_count
 
     def get_queryset(self):
-        subscriptions = SubscriptionsUsers.objects.select_related(
+        return SubscriptionUser.objects.select_related(
             'user', 'author'
-        ).filter(
+        ).prefetch_related('author__recipes').filter(
             user=self.request.user
         ).annotate(count=Count('author__recipes')).order_by('-count')
-        return subscriptions
+
+
+class UserFavoritesList(LoginRequiredMixin, ListView):
+    template_name = 'favorite.html'
+    context_object_name = 'favorites'
+    paginate_by = paginate_count
+
+    def get_queryset(self):
+        return Recipe.objects.select_related(
+            'author').prefetch_related('tag').filter(
+            favorite_recipe__user=self.request.user)
+
+
+class UserPurchasesList(LoginRequiredMixin, ListView):
+    template_name = 'shop_list.html'
+    context_object_name = 'purchases'
+    paginate_by = paginate_count
+
+    def get_queryset(self):
+        return Recipe.objects.filter(shopping_list__user=self.request.user)
 
 
 def page_not_found(request, exception):
