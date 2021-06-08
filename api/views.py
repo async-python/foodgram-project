@@ -19,68 +19,55 @@ class IngredientsViewSet(ListModelMixin, GenericViewSet):
     lookup_field = 'title'
 
 
-class SubscribeCreateDeleteView(CreateModelMixin,
-                                DestroyModelMixin, GenericViewSet):
-    serializer_class = SubscribeSerializer
+class TemplateView(CreateModelMixin,
+                   DestroyModelMixin, GenericViewSet):
     permission_classes = (IsOwnerOrAdmin,)
+
+
+class SubscribeCreateDeleteView(TemplateView):
+    serializer_class = SubscribeSerializer
 
     def create(self, request, *args, **kwargs):
         author = get_object_or_404(User, pk=request.data['id'])
-        data = {
-            'user': request.user.id,
-            'author': author.id
-        }
+        data = {'user': request.user.id, 'author': author.id}
         request.data.update(data)
         return super().create(request, *args, **kwargs)
 
     def get_object(self):
-        obj = get_object_or_404(
+        return get_object_or_404(
             SubscriptionUser,
             author_id=self.kwargs.get('pk'),
             user_id=self.request.user.id)
-        return obj
 
 
-class FavoritesCreateDeleteView(CreateModelMixin,
-                                DestroyModelMixin, GenericViewSet):
+class FavoritesCreateDeleteView(TemplateView):
     serializer_class = FavoriteSerializer
-    permission_classes = (IsOwnerOrAdmin,)
 
     def create(self, request, *args, **kwargs):
         recipe = get_object_or_404(Recipe, pk=request.data['id'])
-        data = {
-            'user': request.user.id,
-            'recipe': recipe.id
-        }
+        data = {'user': request.user.id, 'recipe': recipe.id}
         request.data.update(data)
         return super().create(request, *args, **kwargs)
 
     def get_object(self):
-        obj = get_object_or_404(
+        return get_object_or_404(
             FavoriteRecipe,
             recipe_id=self.kwargs.get('pk'),
             user_id=self.request.user.id)
-        return obj
 
 
-class PurchaseListCreateDeleteView(ListModelMixin, CreateModelMixin,
-                                   DestroyModelMixin, GenericViewSet):
+class PurchaseListCreateDeleteView(ListModelMixin, TemplateView):
     queryset = ShoppingList
     serializer_class = PurchaseSerializer
-    permission_classes = (IsOwnerOrAdmin,)
 
     def create(self, request, *args, **kwargs):
         recipe = get_object_or_404(Recipe, pk=request.data['id'])
-        data = {
-            'user': request.user.id,
-            'recipe': recipe.id
-        }
+        data = {'user': request.user.id, 'recipe': recipe.id}
         request.data.update(data)
         return super().create(request, *args, **kwargs)
 
     def get_object(self):
-        obj = get_object_or_404(
+        return get_object_or_404(
             ShoppingList,
             recipe_id=self.kwargs.get('pk'),
             user_id=self.request.user.id)
-        return obj
