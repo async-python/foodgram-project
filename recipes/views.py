@@ -3,10 +3,12 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView)
 from recipes.forms import RecipeForm
-from recipes.models import Recipe, User, SubscriptionUser, ShoppingList, Tag
+from recipes.models import Recipe, User, SubscriptionUser
 from django.urls import reverse, reverse_lazy
-from recipes.permissions import AuthorPermissionMixin
 from django.db.models import Count
+from django.http import HttpResponse
+from api.views import get_session_key
+from .services import get_list
 
 paginate_count = 3
 
@@ -18,10 +20,24 @@ class IndexView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
-        context['index_page'] = True
+        if self.request.user.is_authenticated:
+            context['favorites'] = Recipe.objects.select_related(
+                'author').prefetch_related('tag').filter(
+                favorite_recipe__user=self.request.user)
+            context['shopping_list'] = Recipe.objects.filter(
+                shopping_list__user=self.request.user)
+        else:
+            context['shopping_list'] = Recipe.objects.filter(
+                shopping_list_session__session_id=
+                get_session_key(self.request))
         return context
 
     def get_queryset(self):
+        tags_values = self.request.GET.getlist('filters')
+        if tags_values:
+            return Recipe.objects.select_related(
+                'author').prefetch_related('tag').filter(
+                tag__name__in=tags_values).distinct()
         return Recipe.objects.select_related(
             'author').prefetch_related('tag').all()
 
@@ -35,6 +51,17 @@ class RecipeView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['ingredients'] = self.object.recipe_ingredients.all()
+        if self.request.user.is_authenticated:
+            context['is_favorite'] = self.object in Recipe.objects.filter(
+                favorite_recipe__user=self.request.user)
+            context['is_subscribe'] = SubscriptionUser.objects.filter(
+                user=self.request.user, author=self.object.author).exists()
+            context['shopping_list'] = Recipe.objects.filter(
+                shopping_list__user=self.request.user)
+        else:
+            context['shopping_list'] = Recipe.objects.filter(
+                shopping_list_session__session_id=
+                get_session_key(self.request))
         return context
 
 
@@ -43,12 +70,6 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     template_name = 'form_recipe.html'
     form_class = RecipeForm
     success_url = reverse_lazy('index')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['create_recipe'] = True
-        context['tags'] = Tag.objects.all()
-        return context
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -64,12 +85,6 @@ class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         return Recipe.objects.select_related(
             'author').prefetch_related('tag').filter(author=self.request.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['update_recipe'] = True
-        context['tags'] = Tag.objects.all()
-        return context
 
     def get_success_url(self):
         return reverse(
@@ -95,6 +110,11 @@ class UserRecipeList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         self.recipe_author = get_object_or_404(
             User, username=self.kwargs.get('username'))
+        tags_values = self.request.GET.getlist('filters')
+        if tags_values:
+            return Recipe.objects.filter(
+                author=self.recipe_author,
+                tag__name__in=tags_values).distinct()
         return Recipe.objects.filter(author=self.recipe_author)
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -104,16 +124,14 @@ class UserRecipeList(LoginRequiredMixin, ListView):
 
 
 class UserFollowList(LoginRequiredMixin, ListView):
-    template_name = 'my_follow.html'
+    template_name = 'user_subscribe.html'
     context_object_name = 'subscriptions'
     paginate_by = paginate_count
 
     def get_queryset(self):
-        return SubscriptionUser.objects.select_related(
-            'user', 'author'
-        ).prefetch_related('author__recipes').filter(
-            user=self.request.user
-        ).annotate(count=Count('author__recipes')).order_by('-count')
+        return User.objects.prefetch_related('recipes').filter(
+            following__user=self.request.user).annotate(
+            count=Count('recipes')).order_by('-count')
 
 
 class UserFavoritesList(LoginRequiredMixin, ListView):
@@ -121,19 +139,40 @@ class UserFavoritesList(LoginRequiredMixin, ListView):
     context_object_name = 'favorites'
     paginate_by = paginate_count
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['shopping_list'] = Recipe.objects.filter(
+            shopping_list__user=self.request.user)
+        return context
+
     def get_queryset(self):
+        tags_values = self.request.GET.getlist('filters')
+        if tags_values:
+            return Recipe.objects.select_related(
+                'author').prefetch_related('tag').filter(
+                tag__name__in=tags_values,
+                favorite_recipe__user=self.request.user).distinct()
         return Recipe.objects.select_related(
             'author').prefetch_related('tag').filter(
             favorite_recipe__user=self.request.user)
 
 
-class UserPurchasesList(LoginRequiredMixin, ListView):
-    template_name = 'shop_list.html'
+class UserPurchasesList(ListView):
+    template_name = 'purchases.html'
     context_object_name = 'purchases'
     paginate_by = paginate_count
 
     def get_queryset(self):
-        return Recipe.objects.filter(shopping_list__user=self.request.user)
+        if self.request.user.is_authenticated:
+            return Recipe.objects.filter(shopping_list__user=self.request.user)
+        return Recipe.objects.filter(
+            shopping_list_session__session_id=get_session_key(self.request))
+
+
+def get_purchases(request):
+    response = HttpResponse(get_list(request), content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename=purchases.txt'
+    return response
 
 
 def page_not_found(request, exception):

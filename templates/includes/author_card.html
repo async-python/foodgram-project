@@ -1,12 +1,12 @@
 {% load static %}
 <form method="post">
-    <div class="card-user" data-author="{{ authors.author.pk }}">
+    <div class="card-user" data-author="{{ author.pk }}">
         <div class="card-user__header">
-            <h2 class="card-user__title">{{ authors.author.first_name }} {{ authors.author.last_name }}</h2>
+            <h2 class="card-user__title">{{ author.first_name }} {{ author.last_name }}</h2>
         </div>
         <div class="card-user__body">
             <ul class="card-user__items">
-                {% for recipe in authors.author.recipes.all|slice:':3' %}
+                {% for recipe in author.recipes.all|slice:':3' %}
                 <li class="card-user__item">
                     <div class="recipe">
                         <img src="{{ recipe.image.url }}" alt="какой-то-текст" class="recipe__image">
@@ -16,9 +16,9 @@
                 </li>
                 {% endfor %}
                 <li class="card-user__item">
-                    <a href="{% url 'user' username=authors.author %}" class="card-user__link link">
+                    <a href="{% url 'user' username=author.username %}" class="card-user__link link">
                     {% if author_card.author.recipes.count > 3 %}
-                        Еще рецептов: {{ authors.author.recipes.count|add:'-3' }}
+                        Еще рецептов: {{ author.recipes.count|add:'-3' }}
                     {% else %}
                         На страницу автора
                     {% endif %}

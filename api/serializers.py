@@ -1,10 +1,7 @@
-from abc import ABC
-
 from rest_framework import serializers
-from rest_framework.generics import get_object_or_404
 from recipes.models import (
-    Ingredient, SubscriptionUser, FavoriteRecipe, ShoppingList)
-from rest_framework.validators import UniqueTogetherValidator
+    Ingredient, SubscriptionUser, FavoriteRecipe, ShoppingList,
+    ShoppingListSession)
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -29,3 +26,9 @@ class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShoppingList
         fields = ('recipe', 'user')
+
+
+class PurchaseSerializerSession(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingListSession
+        fields = ('recipe', 'session')

@@ -4,7 +4,7 @@ class Api {
     }
 
     getPurchases() {
-        return fetch(`/api/purchases/`, {
+        return fetch(this.apiUrl + `purchases/`, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -18,7 +18,7 @@ class Api {
     }
 
     addPurchases(id) {
-        return fetch(`/api/purchases/`, {
+        return fetch(this.apiUrl + `purchases/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ class Api {
     }
 
     removePurchases(id) {
-        return fetch(`/api/purchases/${id}`, {
+        return fetch(this.apiUrl + `purchases/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ class Api {
 
     addSubscriptions(id) {
         debugger;
-        return fetch(`/api/subscriptions/`, {
+        return fetch(this.apiUrl + `subscriptions/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ class Api {
     }
 
     removeSubscriptions(id) {
-        return fetch(`/api/subscriptions/${id}`, {
+        return fetch(this.apiUrl + `subscriptions/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ class Api {
     }
 
     addFavorites(id) {
-        return fetch(`/api/favorites/`, {
+        return fetch(this.apiUrl + `favorites/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ class Api {
     }
 
     removeFavorites(id) {
-        return fetch(`/api/favorites/${id}`, {
+        return fetch(this.apiUrl + `favorites/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ class Api {
     }
 
     getIngredients(text) {
-        return fetch(`/api/ingredients?search=${text}`, {
+        return fetch(this.apiUrl + `ingredients?search=${text}`, {
             headers: {
                 'Content-Type': 'application/json'
             }

@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '=-0jj#k#9ksmm(6j6r--f!rvv@k4nf+5a79%c0n4f8*(ii%tl+'
 
@@ -58,6 +57,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'recipes.processors.purchases_processor',
+                'recipes.processors.all_tags',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -122,3 +124,5 @@ EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'

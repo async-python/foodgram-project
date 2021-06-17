@@ -10,8 +10,11 @@
                 <div class="single-card__header-info">
                     <h1 class="single-card__title">{{ recipe.name }}</h1>
                     <div class="single-card__favorite">
-                        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button>
-                        <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
+                        {% if request.user.is_authenticated %}
+                            <button class="button button_style_none" name="favorites" {% if not is_favorite %}data-out{% endif %}>
+                                <span class="icon-favorite {% if is_favorite %}icon-favorite_active{% endif %}"></span>
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
                 <ul class="single-card__items">
@@ -27,8 +30,16 @@
                     </ul>
                 </div>
                 <ul class="single-card__items">
-                    <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
-                    <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
+                    {% if not recipe in shopping_list %}
+                        <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus button__icon"></span> Добавить в покупки</button></li>
+                    {% else %}
+                        <li class="single-card__item"><button class="button button_style_light-blue" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button></li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                        <li class="single-card__item">
+                            <button class="button button_style_light-blue button_size_subscribe" name="subscribe"
+                                    {% if not is_subscribe %}data-out{% endif %}>{% if not is_subscribe %}Подписаться на автора{% else %}Отписаться от автора{% endif %}</button></li>
+                    {% endif %}
                 </ul>
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингредиенты:</h3>

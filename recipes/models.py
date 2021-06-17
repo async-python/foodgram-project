@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.contrib.sessions.models import Session
 
 User = get_user_model()
 
@@ -138,3 +139,18 @@ class ShoppingList(models.Model):
 
     def __str__(self):
         return f'User: {self.user}, recipe_id: {self.recipe.id}'
+
+
+class ShoppingListSession(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        related_name='shopping_list_session',
+        on_delete=models.CASCADE,
+    )
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('session', 'recipe')
+
+    def __str__(self):
+        return f'User: {self.session}, recipe_id: {self.recipe.id}'

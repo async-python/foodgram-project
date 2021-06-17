@@ -6,18 +6,18 @@
 {% block header %} Мои подписки {% endblock %}
 
 {% block content %}
+    {% if subscriptions %}
         <div class="card-list">
-            {% if subscriptions %}
-                {% for authors in subscriptions %}
-                    {% include "includes/author_card.html" with authors=authors %}
-                {% endfor %}
-            {% else %}
-                <h4 class="custom-text-block">У вас еще нет подписок на других авторов :(</h4>
-            {% endif %}
+            {% for author in subscriptions %}
+                {% include "includes/author_card.html" with author=author %}
+            {% endfor %}
         </div>
-        {% if page_obj.has_other_pages %}
-            {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
-        {% endif %}
+        {% else %}
+            <p class="recipe__text">У вас еще нет подписок на других авторов :(</p>
+    {% endif %}
+    {% if page_obj.has_other_pages %}
+        {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
+    {% endif %}
 {% endblock %}
 
 {% block script %}

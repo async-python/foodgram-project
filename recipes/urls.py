@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     IndexView, RecipeView, RecipeCreateView, RecipeUpdateView,
     RecipeDeleteView, UserRecipeList, UserFollowList, UserFavoritesList,
-    UserPurchasesList)
+    UserPurchasesList, get_purchases)
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -10,11 +10,12 @@ urlpatterns = [
     path('new/', RecipeCreateView.as_view(), name='new'),
     path('favorites/', UserFavoritesList.as_view(), name='favorites'),
     path('purchases/', UserPurchasesList.as_view(), name='purchases'),
+    path('download_list/', get_purchases, name='download_list'),
     path('<str:username>/', UserRecipeList.as_view(), name='user'),
     path('<str:username>/<int:recipe_id>/', RecipeView.as_view(),
          name='recipe'),
     path('<str:username>/<int:recipe_id>/edit/', RecipeUpdateView.as_view(),
          name='edit_recipe'),
     path('<str:username>/<int:recipe_id>/delete/', RecipeDeleteView.as_view(),
-         name='delete_recipe')
+         name='delete_recipe'),
 ]

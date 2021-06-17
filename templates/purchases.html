@@ -6,18 +6,18 @@
 {% block header %} Список покупок {% endblock %}
 
 {% block content %}
-    <div class="card-list card-list_column">
-        <ul class="shopping-list">
-            {% if purchases %}
+    {% if purchases %}
+        <div class="card-list card-list_column">
+            <ul class="shopping-list">
                 {% for recipe in purchases %}
                     {% include "includes/purchase_item.html" with recipe=recipe %}
                 {% endfor %}
-            {% else %}
-                <p class="custom-text-block">Рецептов еще нет, вы можете стать первым автором :)</p>
-            {% endif %}
-        </ul>
-        <a href="#"><button class="button button_style_blue">Скачать список</button></a>
-    </div>
+                <a href="{% url 'download_list' %}"><button class="button button_style_blue">Скачать список</button></a>
+            </ul>
+        </div>
+    {% else %}
+        <p class="recipe__text">Ваш список покупок пуст</p>
+    {% endif %}
 {% endblock %}
 
 {% block script %}

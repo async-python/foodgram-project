@@ -2,9 +2,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.filters import SearchFilter
 from api.serializers import (
     IngredientSerializer, SubscribeSerializer, FavoriteSerializer,
-    PurchaseSerializer)
+    PurchaseSerializer, PurchaseSerializerSession)
 from recipes.models import (Ingredient, SubscriptionUser, User,
-                            FavoriteRecipe, Recipe, ShoppingList)
+                            FavoriteRecipe, Recipe, ShoppingList,
+                            ShoppingListSession)
 from rest_framework.mixins import (
     CreateModelMixin, ListModelMixin, DestroyModelMixin)
 from rest_framework.viewsets import GenericViewSet
@@ -19,12 +20,12 @@ class IngredientsViewSet(ListModelMixin, GenericViewSet):
     lookup_field = 'title'
 
 
-class TemplateView(CreateModelMixin,
-                   DestroyModelMixin, GenericViewSet):
+class BaseCreateDeleteView(CreateModelMixin,
+                           DestroyModelMixin, GenericViewSet):
     permission_classes = (IsOwnerOrAdmin,)
 
 
-class SubscribeCreateDeleteView(TemplateView):
+class SubscribeCreateDeleteView(BaseCreateDeleteView):
     serializer_class = SubscribeSerializer
 
     def create(self, request, *args, **kwargs):
@@ -40,7 +41,7 @@ class SubscribeCreateDeleteView(TemplateView):
             user_id=self.request.user.id)
 
 
-class FavoritesCreateDeleteView(TemplateView):
+class FavoritesCreateDeleteView(BaseCreateDeleteView):
     serializer_class = FavoriteSerializer
 
     def create(self, request, *args, **kwargs):
@@ -56,18 +57,41 @@ class FavoritesCreateDeleteView(TemplateView):
             user_id=self.request.user.id)
 
 
-class PurchaseListCreateDeleteView(ListModelMixin, TemplateView):
-    queryset = ShoppingList
-    serializer_class = PurchaseSerializer
+class PurchaseListCreateDeleteView(ListModelMixin, CreateModelMixin,
+                                   DestroyModelMixin, GenericViewSet):
+
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return PurchaseSerializer
+        return PurchaseSerializerSession
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return ShoppingList
+        return ShoppingListSession
 
     def create(self, request, *args, **kwargs):
         recipe = get_object_or_404(Recipe, pk=request.data['id'])
-        data = {'user': request.user.id, 'recipe': recipe.id}
+        if self.request.user.is_authenticated:
+            data = {'user': self.request.user.id, 'recipe': recipe.id}
+        else:
+            data = {'session': get_session_key(request), 'recipe': recipe.id}
         request.data.update(data)
         return super().create(request, *args, **kwargs)
 
     def get_object(self):
+        if self.request.user.is_authenticated:
+            return get_object_or_404(
+                ShoppingList,
+                recipe_id=self.kwargs.get('pk'),
+                user_id=self.request.user.id)
         return get_object_or_404(
-            ShoppingList,
+            ShoppingListSession,
             recipe_id=self.kwargs.get('pk'),
-            user_id=self.request.user.id)
+            session_id=get_session_key(self.request))
+
+
+def get_session_key(request):
+    if not request.session.session_key:
+        request.session.save()
+    return request.session.session_key
