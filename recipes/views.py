@@ -30,7 +30,7 @@ class IndexView(BaseListView):
         if tags_values:
             return Recipe.objects.select_related(
                 'author').prefetch_related('tags').filter(
-                tag__name__in=tags_values).distinct()
+                tags__name__in=tags_values).distinct()
         return Recipe.objects.select_related(
             'author').prefetch_related('tags').all()
 
@@ -98,7 +98,7 @@ class UserRecipeList(LoginRequiredMixin, BaseListView):
         if tags_values:
             return Recipe.objects.filter(
                 author=self.recipe_author,
-                tag__name__in=tags_values).distinct()
+                tags__name__in=tags_values).distinct()
         return Recipe.objects.filter(author=self.recipe_author)
 
 
@@ -121,7 +121,7 @@ class UserFavoritesList(LoginRequiredMixin, BaseListView):
         if tags_values:
             return Recipe.objects.select_related(
                 'author').prefetch_related('tags').filter(
-                tag__name__in=tags_values,
+                tags__name__in=tags_values,
                 favorite_recipe__user=self.request.user).distinct()
         return Recipe.objects.select_related(
             'author').prefetch_related('tags').filter(
