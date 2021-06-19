@@ -96,10 +96,12 @@ class UserRecipeList(LoginRequiredMixin, BaseListView):
             User, username=self.kwargs.get('username'))
         tags_values = self.get_filter_list()
         if tags_values:
-            return Recipe.objects.filter(
+            return Recipe.objects.select_related(
+                'author').prefetch_related('tags').filter(
                 author=self.recipe_author,
                 tags__name__in=tags_values).distinct()
-        return Recipe.objects.filter(author=self.recipe_author)
+        return Recipe.objects.select_related('author').prefetch_related(
+            'tags').filter(author=self.recipe_author)
 
 
 class UserFollowList(LoginRequiredMixin, BaseListView):
