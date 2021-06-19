@@ -21,11 +21,11 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50, null=True, verbose_name='Name')
+    name = models.CharField(max_length=50, unique=True, verbose_name='Name')
     slug = models.SlugField(
-        max_length=50, null=True, unique=True, verbose_name='Slug')
+        max_length=50, unique=True, verbose_name='Slug')
     color = models.CharField(
-        max_length=50, null=True, verbose_name='Check box color')
+        max_length=50, unique=True, verbose_name='Check box color')
 
     class Meta:
         verbose_name = 'Tag'
