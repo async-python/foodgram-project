@@ -40,3 +40,8 @@ def get_shopping_list(request):
         return Recipe.objects.filter(shopping_list__user=request.user)
     return Recipe.objects.filter(
         shopping_list_session__session_id=get_session_key(request))
+
+
+@register.filter
+def add_class(field, css):
+    return field.as_widget(attrs={"class": css})
