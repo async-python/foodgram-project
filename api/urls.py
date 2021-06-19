@@ -1,8 +1,8 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import (
-    IngredientsViewSet, SubscribeCreateDeleteView,
-    FavoritesCreateDeleteView, PurchaseListCreateDeleteView)
+
+from .views import (FavoritesCreateDeleteView, IngredientsViewSet,
+                    PurchaseListCreateDeleteView, SubscribeCreateDeleteView)
 
 router = DefaultRouter()
 router.register(r'ingredients', IngredientsViewSet)
@@ -14,5 +14,5 @@ router.register(
     r'purchases', PurchaseListCreateDeleteView, basename='purchases_api')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('v1/', include(router.urls)),
 ]

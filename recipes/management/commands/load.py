@@ -1,11 +1,12 @@
 import csv
 
 from django.core.management.base import BaseCommand
+
 from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
-    help = 'The Zen of Python'
+    help = 'Load template ingredients to database model Ingredient'
 
     def handle(self, *args, **options):
         with open('./ingredients.csv') as f:

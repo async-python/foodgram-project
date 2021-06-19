@@ -67,9 +67,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -126,3 +123,5 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+PAGINATOR_ITEMS_DISPLAY = 3

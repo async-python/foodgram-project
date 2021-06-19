@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Recipe, Tag, RecipeIngredient, SubscriptionUser
+
+from .models import (FavoriteRecipe, Recipe, RecipeIngredient, ShoppingList,
+                     ShoppingListSession, SubscriptionUser, Tag)
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -28,7 +30,22 @@ class SubscriptionsUsersAdmin(admin.ModelAdmin):
     list_display = ('pk', 'user', 'author',)
 
 
+class FavoriteRecipeAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'user')
+
+
+class ShoppingListAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'user')
+
+
+class ShoppingListSessionAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'session')
+
+
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
 admin.site.register(SubscriptionUser, SubscriptionsUsersAdmin)
+admin.site.register(FavoriteRecipe, FavoriteRecipeAdmin)
+admin.site.register(ShoppingList, ShoppingListAdmin)
+admin.site.register(ShoppingListSession, ShoppingListSessionAdmin)

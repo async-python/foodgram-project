@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load recipe_filter %}
 {% load static %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
@@ -9,15 +10,17 @@
 {% endblock %}
 
 {% block content %}
-    {% if favorites %}
-        <div class="card-list">
-            {% for recipe in favorites %}
-                {% include "includes/recipe_card.html" with recipe=recipe %}
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="custom-text-block">Избранных рецептов еще нет :(</p>
-    {% endif %}
+    {% with favorites_list=favorites shopping_list=request|get_shopping_list %}
+        {% if favorites_list %}
+            <div class="card-list">
+                {% for recipe in favorites_list %}
+                    {% include "includes/recipe_card.html" %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="custom-text-block">Избранных рецептов еще нет :(</p>
+        {% endif %}
+    {% endwith %}
     {% if page_obj.has_other_pages %}
         {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
     {% endif %}

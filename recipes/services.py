@@ -1,6 +1,7 @@
+from django.db.models import F, Sum
+
 from api.views import get_session_key
 from recipes.models import Recipe
-from django.db.models import Sum, F
 
 
 def get_list(request):
@@ -13,7 +14,11 @@ def get_list(request):
     ingredient_list = recipes.values(
         title=F('ingredients__title'), dimension=F('ingredients__dimension'),
     ).annotate(amount=Sum('recipe_ingredients__amount')).order_by()
-    for i in ingredient_list:
-        item = (i.get('title'), str(i.get('amount')), i.get('dimension'))
+    for ingredient in ingredient_list:
+        item = (
+            ingredient.get('title'),
+            str(ingredient.get('amount')),
+            ingredient.get('dimension')
+        )
         result += (' '.join(item)) + '\n'
     return result

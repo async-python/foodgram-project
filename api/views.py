@@ -1,15 +1,16 @@
-from rest_framework.generics import get_object_or_404
 from rest_framework.filters import SearchFilter
-from api.serializers import (
-    IngredientSerializer, SubscribeSerializer, FavoriteSerializer,
-    PurchaseSerializer, PurchaseSerializerSession)
-from recipes.models import (Ingredient, SubscriptionUser, User,
-                            FavoriteRecipe, Recipe, ShoppingList,
-                            ShoppingListSession)
-from rest_framework.mixins import (
-    CreateModelMixin, ListModelMixin, DestroyModelMixin)
+from rest_framework.generics import get_object_or_404
+from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
+                                   ListModelMixin)
 from rest_framework.viewsets import GenericViewSet
+
 from api.permissions import IsOwnerOrAdmin
+from api.serializers import (FavoriteSerializer, IngredientSerializer,
+                             PurchaseSerializer, PurchaseSerializerSession,
+                             SubscribeSerializer)
+from api.utils import get_session_key
+from recipes.models import (FavoriteRecipe, Ingredient, Recipe, ShoppingList,
+                            ShoppingListSession, SubscriptionUser, User)
 
 
 class IngredientsViewSet(ListModelMixin, GenericViewSet):
@@ -29,7 +30,7 @@ class SubscribeCreateDeleteView(BaseCreateDeleteView):
     serializer_class = SubscribeSerializer
 
     def create(self, request, *args, **kwargs):
-        author = get_object_or_404(User, pk=request.data['id'])
+        author = get_object_or_404(User, pk=request.data.get('id'))
         data = {'user': request.user.id, 'author': author.id}
         request.data.update(data)
         return super().create(request, *args, **kwargs)
@@ -45,7 +46,7 @@ class FavoritesCreateDeleteView(BaseCreateDeleteView):
     serializer_class = FavoriteSerializer
 
     def create(self, request, *args, **kwargs):
-        recipe = get_object_or_404(Recipe, pk=request.data['id'])
+        recipe = get_object_or_404(Recipe, pk=request.data.get('id'))
         data = {'user': request.user.id, 'recipe': recipe.id}
         request.data.update(data)
         return super().create(request, *args, **kwargs)
@@ -71,7 +72,7 @@ class PurchaseListCreateDeleteView(ListModelMixin, CreateModelMixin,
         return ShoppingListSession
 
     def create(self, request, *args, **kwargs):
-        recipe = get_object_or_404(Recipe, pk=request.data['id'])
+        recipe = get_object_or_404(Recipe, pk=request.data.get('id'))
         if self.request.user.is_authenticated:
             data = {'user': self.request.user.id, 'recipe': recipe.id}
         else:
@@ -89,9 +90,3 @@ class PurchaseListCreateDeleteView(ListModelMixin, CreateModelMixin,
             ShoppingListSession,
             recipe_id=self.kwargs.get('pk'),
             session_id=get_session_key(self.request))
-
-
-def get_session_key(request):
-    if not request.session.session_key:
-        request.session.save()
-    return request.session.session_key

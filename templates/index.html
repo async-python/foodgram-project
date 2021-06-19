@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load recipe_filter %}
 {% load static %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
@@ -9,18 +10,20 @@
 {% endblock %}
 
 {% block content %}
-        <div class="card-list">
+    <div class="card-list">
+        {% with favorites_list=request.user|get_favorites shopping_list=request|get_shopping_list %}
             {% if recipe_list %}
                 {% for recipe in recipe_list %}
-                    {% include "includes/recipe_card.html" with recipe=recipe %}
+                    {% include "includes/recipe_card.html" %}
                 {% endfor %}
             {% else %}
                 <p class="custom-text-block">Рецептов еще нет, вы можете стать первым автором :)</p>
             {% endif %}
-        </div>
-        {% if page_obj.has_other_pages %}
-            {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
-        {% endif %}
+        {% endwith %}
+    </div>
+    {% if page_obj.has_other_pages %}
+        {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
+    {% endif %}
 {% endblock %}
 
 {% block script %}

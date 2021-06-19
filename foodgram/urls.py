@@ -1,14 +1,18 @@
 from django.conf import settings
-from django.contrib import admin
-from django.urls import path, include
 from django.conf.urls import handler404, handler500
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.flatpages.views import flatpage
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.urls import include, path
 
 urlpatterns = [
     path('auth/', include('users.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('about-author/',
+         flatpage, {'url': '/about-author/'}, name='about_author'),
+    path('used-techs/', flatpage, {'url': '/used-techs/'}, name='used_techs'),
     path('', include('recipes.urls')),
 ]
 
@@ -24,5 +28,5 @@ if settings.DEBUG:
         settings.STATIC_URL, document_root=settings.STATIC_ROOT
     )
 
-handler404 = 'recipes.views.page_not_found'
-handler500 = 'recipes.views.server_error'
+handler404 = 'foodgram.views.page_not_found'
+handler500 = 'foodgram.views.server_error'

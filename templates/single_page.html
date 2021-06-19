@@ -1,20 +1,18 @@
 {% extends 'base.html' %}
+{% load recipe_filter %}
 {% load static %}
 {% block static %}
    <link rel="stylesheet" href="{% static 'pages/single.css' %}">
 {% endblock %}
 {% block content %}
+    {% with favorites_list=request.user|get_favorites shopping_list=request|get_shopping_list %}
         <div class="single-card" data-id="{{ recipe.id }}" data-author="{{ recipe.author_id }}">
             <img src="{{ recipe.image.url }}" alt="какой-то текст" class="single-card__image">
             <div class="single-card__info">
                 <div class="single-card__header-info">
                     <h1 class="single-card__title">{{ recipe.name }}</h1>
                     <div class="single-card__favorite">
-                        {% if request.user.is_authenticated %}
-                            <button class="button button_style_none" name="favorites" {% if not is_favorite %}data-out{% endif %}>
-                                <span class="icon-favorite {% if is_favorite %}icon-favorite_active{% endif %}"></span>
-                            </button>
-                        {% endif %}
+                        {% include 'includes/favorite_button.html' %}
                     </div>
                 </div>
                 <ul class="single-card__items">
@@ -55,6 +53,7 @@
                 </div>
             </div>
         </div>
+    {% endwith %}
 {% endblock %}
 
 {% block script %}

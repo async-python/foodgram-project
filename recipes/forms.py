@@ -1,7 +1,8 @@
 from django import forms
-from django.forms.widgets import CheckboxSelectMultiple
-from recipes.models import Recipe, Tag, RecipeIngredient, Ingredient
 from django.db import transaction
+from django.forms.widgets import CheckboxSelectMultiple
+
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 
 
 class RecipeForm(forms.ModelForm):
