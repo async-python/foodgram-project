@@ -48,8 +48,6 @@ jobs:
       refs/heads/main
       ', github.ref)
     steps:
-      - id: dotenv
-        uses: ./.github/actions/dotenv-action
       - name: Checkout the repo
         uses: actions/checkout@v2
       - name: copy file via ssh password
