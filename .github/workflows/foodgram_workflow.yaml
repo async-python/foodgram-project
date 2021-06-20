@@ -36,8 +36,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
-        env:
-          PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
         with:
           push: true
           tags: vardeath/foodgram:v1.0
