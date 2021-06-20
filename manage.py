@@ -7,12 +7,12 @@ load_dotenv()
 
 
 def main():
-    if os.environ.get('DEV'):
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE',
-                              'foodgram.settings_dev')
-    else:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE',
-                              'foodgram.settings')
+    # if os.environ.get('DEV'):
+    #     os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+    #                           'foodgram.settings_dev')
+    # else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+                          'foodgram.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
