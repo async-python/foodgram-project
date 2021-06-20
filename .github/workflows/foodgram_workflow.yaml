@@ -36,6 +36,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_ENGINE: ${{ secrets.DB_ENGINE }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         with:
           push: true
           tags: vardeath/foodgram:v1.0
