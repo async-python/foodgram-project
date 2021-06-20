@@ -61,8 +61,8 @@ jobs:
           target: "~/app/"
       - name: executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
-          env:
-            PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
+        env:
+          PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
