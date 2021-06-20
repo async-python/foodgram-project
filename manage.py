@@ -7,9 +7,9 @@ load_dotenv()
 
 
 def main():
-    if os.environ.get('PROD'):
+    if os.environ.get('DEV'):
         os.environ.setdefault('DJANGO_SETTINGS_MODULE',
-                              'foodgram.settings_prod')
+                              'foodgram.settings_dev')
     else:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                               'foodgram.settings')
