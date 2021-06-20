@@ -46,7 +46,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         with:
           push: true
-          tags: vardeath/foodgram:v1.0
+          tags: vardeath/foodgram:v1.1
 
   deploy:
     runs-on: ubuntu-latest
