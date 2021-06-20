@@ -3,7 +3,7 @@
     <div class="card__body">
         <a class="card__title link" href="{% url 'recipe' recipe.author.username recipe.id %}" target="_blank">{{ recipe.name }}</a>
         <ul class="card__items">
-            {% include 'includes/card_tags.html' with tags=recipe.tags.all %}
+            {% include 'recipes/includes/card_tags.html' with tags=recipe.tags.all %}
         </ul>
         <div class="card__items card__items_column">
             <p class="card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
@@ -16,6 +16,6 @@
         {% else %}
             <button class="button button_style_light-blue" name="purchases"><span class="icon-check button__icon"></span>Рецепт добавлен</button>
         {% endif %}
-        {% include 'includes/favorite_button.html' %}
+        {% include 'recipes/includes/favorite_button.html' %}
     </div>
 </div>

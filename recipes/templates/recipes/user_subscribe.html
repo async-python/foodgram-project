@@ -9,14 +9,14 @@
     {% if subscriptions %}
         <div class="card-list">
             {% for author in subscriptions %}
-                {% include "includes/author_card.html" with author=author %}
+                {% include "recipes/includes/author_card.html" with author=author %}
             {% endfor %}
         </div>
         {% else %}
             <p class="recipe__text">У вас еще нет подписок на других авторов :(</p>
     {% endif %}
     {% if page_obj.has_other_pages %}
-        {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
+        {% include "recipes/includes/paginator.html" with items=page_obj paginator=paginator%}
     {% endif %}
 {% endblock %}
 

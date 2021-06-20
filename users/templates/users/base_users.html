@@ -13,7 +13,7 @@
         <form class="form" method="post">
             {% block info %}{% endblock %}
             {% csrf_token %}
-            {% include "includes/users_form_fields.html" %}
+            {% include "users/includes/users_form_fields.html" %}
             <div class="form__footer">
                 <button class="button button_style_blue" type="submit">{% block button %} Button text {% endblock %}</button>
                 {% block href %}{% endblock %}

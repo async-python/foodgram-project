@@ -4,17 +4,16 @@
 {% block static %}
     <link rel="stylesheet" href="{% static 'pages/index.css' %}">
 {% endblock %}
-{% block header %} Рецепты {% endblock %}
+{% block header %} {{ request.user.first_name }} {{ request.user.last_name }}{% endblock %}
 {% block tags %}
-    {% include "includes/filter_tags.html" %}
+    {% include "recipes/includes/filter_tags.html" %}
 {% endblock %}
-
 {% block content %}
     <div class="card-list">
         {% with favorites_list=request.user|get_favorites shopping_list=request|get_shopping_list %}
             {% if recipe_list %}
                 {% for recipe in recipe_list %}
-                    {% include "includes/recipe_card.html" %}
+                    {% include "recipes/includes/recipe_card.html" %}
                 {% endfor %}
             {% else %}
                 <p class="custom-text-block">Рецептов еще нет, вы можете стать первым автором :)</p>
@@ -22,23 +21,18 @@
         {% endwith %}
     </div>
     {% if page_obj.has_other_pages %}
-        {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
+        {% include "recipes/includes/paginator.html" with items=page_obj paginator=paginator%}
     {% endif %}
 {% endblock %}
-
 {% block script %}
     {% csrf_token %}
     <script src="{% static 'js/components/MainCards.js' %}"></script>
     <script src="{% static 'js/components/Purchases.js' %}"></script>
+    <script src="{% static '/js/components/Favorites.js' %}"></script>
+    <script src="{% static '/js/components/Subscribe.js' %}"></script>
     <script src="{% static 'js/config/config.js' %}"></script>
-    <script src="{% static 'js/components/CardList.js' %}"></script>
+    <script src="{% static '/js/components/AuthorRecipe.js' %}"></script>
     <script src="{% static 'js/components/Header.js' %}"></script>
     <script src="{% static 'js/api/Api.js' %}"></script>
-
-    {% if user.is_anonymous %}
-         <script src="{% static 'indexNotAuth.js' %}"></script>
-    {% else %}
-        <script src="{% static 'js/components/Favorites.js' %}"></script>
-        <script src="{% static 'indexAuth.js' %}"></script>
-    {% endif %}
+    <script src="{% static 'authorRecipe.js' %}"></script>
 {% endblock %}

@@ -22,7 +22,7 @@ class BaseListView(ListView):
 
 
 class IndexView(BaseListView):
-    template_name = 'index.html'
+    template_name = 'recipes/index.html'
     context_object_name = 'recipe_list'
 
     def get_queryset(self):
@@ -37,7 +37,7 @@ class IndexView(BaseListView):
 
 class RecipeView(DetailView):
     model = Recipe
-    template_name = 'single_page.html'
+    template_name = 'recipes/single_page.html'
     pk_url_kwarg = 'recipe_id'
     query_pk_and_slug = ('recipe_id', 'username')
 
@@ -52,7 +52,7 @@ class RecipeView(DetailView):
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
-    template_name = 'form_recipe.html'
+    template_name = 'recipes/form_recipe.html'
     form_class = RecipeForm
     success_url = reverse_lazy('index')
 
@@ -62,7 +62,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 
 
 class RecipeUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = 'form_recipe.html'
+    template_name = 'recipes/form_recipe.html'
     form_class = RecipeForm
     pk_url_kwarg = 'recipe_id'
     query_pk_and_slug = ('recipe_id', 'username')
@@ -80,7 +80,7 @@ class RecipeUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class RecipeDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'recipe_confirm_delete.html'
+    template_name = 'recipes/recipe_confirm_delete.html'
     model = Recipe
     pk_url_kwarg = 'recipe_id'
     query_pk_and_slug = ('recipe_id', 'username')
@@ -88,7 +88,7 @@ class RecipeDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class UserRecipeList(LoginRequiredMixin, BaseListView):
-    template_name = 'author_recipe.html'
+    template_name = 'recipes/author_recipe.html'
     context_object_name = 'recipe_list'
 
     def get_queryset(self):
@@ -105,7 +105,7 @@ class UserRecipeList(LoginRequiredMixin, BaseListView):
 
 
 class UserFollowList(LoginRequiredMixin, BaseListView):
-    template_name = 'user_subscribe.html'
+    template_name = 'recipes/user_subscribe.html'
     context_object_name = 'subscriptions'
 
     def get_queryset(self):
@@ -115,7 +115,7 @@ class UserFollowList(LoginRequiredMixin, BaseListView):
 
 
 class UserFavoritesList(LoginRequiredMixin, BaseListView):
-    template_name = 'favorite.html'
+    template_name = 'recipes/favorite.html'
     context_object_name = 'favorites'
 
     def get_queryset(self):
@@ -131,7 +131,7 @@ class UserFavoritesList(LoginRequiredMixin, BaseListView):
 
 
 class UserPurchasesList(BaseListView):
-    template_name = 'purchases.html'
+    template_name = 'recipes/purchases.html'
     context_object_name = 'purchases'
 
     def get_queryset(self):

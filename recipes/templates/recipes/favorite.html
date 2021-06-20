@@ -6,7 +6,7 @@
 {% endblock %}
 {% block header %} Избранное {% endblock %}
 {% block tags %}
-    {% include "includes/filter_tags.html" %}
+    {% include "recipes/includes/filter_tags.html" %}
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
         {% if favorites_list %}
             <div class="card-list">
                 {% for recipe in favorites_list %}
-                    {% include "includes/recipe_card.html" %}
+                    {% include "recipes/includes/recipe_card.html" %}
                 {% endfor %}
             </div>
         {% else %}
@@ -22,7 +22,7 @@
         {% endif %}
     {% endwith %}
     {% if page_obj.has_other_pages %}
-        {% include "includes/paginator.html" with items=page_obj paginator=paginator%}
+        {% include "recipes/includes/paginator.html" with items=page_obj paginator=paginator%}
     {% endif %}
 {% endblock %}
 
