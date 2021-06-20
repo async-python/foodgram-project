@@ -9,7 +9,6 @@ __pycache__/
 # Static / Media
 media/*
 static/*
-assets/*
 # Distribution / packaging
 .Python
 build/
