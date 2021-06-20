@@ -39,6 +39,8 @@ jobs:
         with:
           push: true
           tags: vardeath/foodgram:v1.0
+          env:
+            PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
 
   deploy:
     runs-on: ubuntu-latest
