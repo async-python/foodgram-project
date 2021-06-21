@@ -16,7 +16,7 @@ services:
     restart: always
 
   web:
-    build: vardeath/foodgram:v1.1
+    image: vardeath/foodgram:v1.2
     container_name: web
     restart: always
     expose:
