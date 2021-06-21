@@ -7,7 +7,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 
 from api.utils import get_session_key
-from foodgram.settings_dev import PAGINATOR_ITEMS_DISPLAY
+from foodgram.settings import PAGINATOR_ITEMS_DISPLAY
 from recipes.forms import RecipeForm
 from recipes.models import Recipe, SubscriptionUser, User
 
