@@ -6,7 +6,7 @@ from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 
 
 class RecipeForm(forms.ModelForm):
-    tag = forms.ModelMultipleChoiceField(
+    tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
         to_field_name='slug',
     )
@@ -19,10 +19,10 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = (
-            'name', 'tag', 'ingredients', 'cooking_time', 'description',
+            'name', 'tags', 'ingredients', 'cooking_time', 'description',
             'image',)
         widgets = {
-            'tag': CheckboxSelectMultiple(),
+            'tags': CheckboxSelectMultiple(),
         }
 
     def __init__(self, data=None, *args, **kwargs):

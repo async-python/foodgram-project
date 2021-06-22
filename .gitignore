@@ -133,3 +133,6 @@ dmypy.json
 
 #Idea config
 .idea/
+
+#Develop settings
+foodgram/settings_dev.py
