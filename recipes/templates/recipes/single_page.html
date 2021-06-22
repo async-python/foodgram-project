@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <ul class="single-card__items">
-                    {% include 'recipes/includes/card_tags.html' with tags=recipe.tag.all %}
+                    {% include 'recipes/includes/card_tags.html' with tags=recipe.tags.all %}
                 </ul>
                 <div class="single-card__items single-card__items_column">
                     <p class="single-card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>

@@ -26,12 +26,12 @@
                             <div class="tags__item">
                                 <input type="checkbox" name="tag" value="{{ tag.slug }}" id="id_{{ tag.slug }}"
                                        class="tags__checkbox tags__checkbox_style_{{ tag.color }}"
-                                       {% if tag in recipe.tag.all %} checked {% endif %}>
+                                       {% if tag in recipe.tags.all %} checked {% endif %}>
                                 <label for="id_{{ tag.slug }}" class="tags__label">{{ tag.name }}</label>
                             </div>
                         {% endfor %}
                     </div>
-                    <span class="form__error">{{ form.tag.errors }}</span>
+                    <span class="form__error">{{ form.tags.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
