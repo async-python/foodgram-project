@@ -29,19 +29,17 @@ git clone https://github.com/netshy/foodgram-project.git
 - DB_PORT=5432
 - SECRET_KEY=<your secret key>
 
-##### Для локального использования DB_HOST=127.0.0.1
-##### Для включения дебага DEBUG=True
-
 3) С помощью Dockerfile и docker-compose.yaml разверните проект:
 
 - `sudo docker-compose up -d`
 - `docker-compose run --rm web python manage.py migrate`
 - `docker-compose run --rm web python manage.py collectstatic --no-input`
-- Загрузка бд тестовыми данными:
+4) Загрузка бд тестовыми данными:
 - `docker-compose run --rm web python manage.py shell`
 - `>>> from django.contrib.contenttypes.models import ContentType`
 - `>>> ContentType.objects.all().delete()`
 - `>>> quit()`
-- затем:
 - `docker-compose run --rm web python manage.py loaddata dump.json`
 
+5) Создание суперпользователя:
+- `docker-compose run --rm web python manage.py createsuperuser`
