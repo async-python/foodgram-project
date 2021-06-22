@@ -1,23 +1,30 @@
 from django import template
 
 from api.utils import get_session_key
-from recipes.models import Recipe
+from recipes.models import Recipe, Tag
 
 register = template.Library()
 
 
 @register.filter(name='get_filter_values')
-def get_filter_values(value):
-    return value.getlist('filters')
+def get_filter_values(request):
+    request._mutable = True
+    filters = request.getlist('filters')
+    filters = list(set(filters))
+    if not len(filters):
+        tags = Tag.objects.all()
+        for tag in tags:
+            filters.append(tag.name)
+    request.setlist('filters', filters)
+    request._mutable = False
+    return filters
 
 
 @register.filter(name='get_filter_link')
 def get_filter_link(request, tag):
     new_request = request.GET.copy()
-
-    if tag.name in request.GET.getlist('filters'):
-        filters = new_request.getlist('filters')
-        filters = list(set(filters))
+    filters = request.GET.getlist('filters')
+    if tag.name in filters:
         filters.remove(tag.name)
         new_request.setlist('filters', filters)
     else:
@@ -45,3 +52,11 @@ def get_shopping_list(request):
 @register.filter
 def add_class(field, css):
     return field.as_widget(attrs={"class": css})
+
+
+@register.filter(name='url_parse')
+def url_parse(request):
+    result = ''
+    for item in request.GET.getlist('filters'):
+        result += f'&filters={item}'
+    return result

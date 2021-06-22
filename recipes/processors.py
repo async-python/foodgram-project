@@ -9,12 +9,5 @@ def purchases_processor(request):
         session_id=request.session.session_key).count()}
 
 
-def url_parse(request):
-    result = []
-    for item in request.GET.getlist('filters'):
-        result += f'&filters={item}'
-    return {'filters': ''.join(result)}
-
-
 def all_tags(request):
     return {'all_tags': Tag.objects.all()}
