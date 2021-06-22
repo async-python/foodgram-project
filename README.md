@@ -1,7 +1,7 @@
 [![Foodgram_workflow](https://github.com/vardeath/foodgram-project/actions/workflows/foodgram_workflow.yaml/badge.svg)](https://github.com/vardeath/foodgram-project/actions/workflows/foodgram_workflow.yaml)
 
 # Foodgram-project
-http:/178.154.247.254
+http://178.154.247.254
 ## Описание
 Приложение «Продуктовый помощник»: сайт, на котором пользователи публикуют рецепты, добавляют чужие рецепты в избранное и подписываются на публикации других авторов. Сервис «Список покупок» позволит пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд.
 
@@ -18,7 +18,7 @@ http:/178.154.247.254
 ## Как запустить проект, используя Docker (база данных PostgreSQL):
 1) Клонируйте репозиторий с проектом:
 ```
-git clone https://github.com/netshy/foodgram-project.git
+git clone https://github.com/vardeath/foodgram-project.git
 ```
 2) В директории проекта создайте файл .env, по пути `<project_name>/.env`, в котором пропишите следующие переменные окружения:
 - DB_ENGINE=django.db.backends.postgresql
