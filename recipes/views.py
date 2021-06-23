@@ -39,7 +39,13 @@ class RecipeView(DetailView):
     model = Recipe
     template_name = 'recipes/single_page.html'
     pk_url_kwarg = 'recipe_id'
-    query_pk_and_slug = ('recipe_id', 'username')
+    query_pk_and_slug = True
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Recipe, author__username=self.kwargs.get('username'),
+            id=self.kwargs.get('recipe_id')
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

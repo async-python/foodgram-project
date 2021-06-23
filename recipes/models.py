@@ -84,7 +84,12 @@ class RecipeIngredient(models.Model):
     )
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE, verbose_name='Ingredient')
-    amount = models.PositiveIntegerField(verbose_name='Amount')
+    amount = models.PositiveIntegerField(
+        verbose_name='Amount',
+        validators=(
+            MinValueValidator(0, message='The value must be greater than 0'),
+        ),
+    )
 
     class Meta:
         verbose_name = 'Recipe Ingredient'
