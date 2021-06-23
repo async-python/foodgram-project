@@ -27,6 +27,11 @@ class BaseCreateDeleteView(CreateModelMixin,
                            DestroyModelMixin, GenericViewSet):
     permission_classes = (IsOwnerOrAdmin,)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        success = instance.delete()
+        return Response({'success': bool(success)}, status=status.HTTP_200_OK)
+
 
 class SubscribeCreateDeleteView(BaseCreateDeleteView):
     serializer_class = SubscribeSerializer
@@ -47,11 +52,6 @@ class SubscribeCreateDeleteView(BaseCreateDeleteView):
 class FavoritesCreateDeleteView(BaseCreateDeleteView):
     serializer_class = FavoriteSerializer
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        success = instance.delete()
-        return Response({'success': bool(success)}, status=status.HTTP_200_OK)
-
     def create(self, request, *args, **kwargs):
         recipe = get_object_or_404(Recipe, pk=request.data.get('id'))
         data = {'user': request.user.id, 'recipe': recipe.id}
@@ -63,6 +63,11 @@ class FavoritesCreateDeleteView(BaseCreateDeleteView):
             FavoriteRecipe,
             recipe_id=self.kwargs.get('pk'),
             user_id=self.request.user.id)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        success = instance.delete()
+        return Response({'success': bool(success)}, status=status.HTTP_200_OK)
 
 
 class PurchaseListCreateDeleteView(ListModelMixin, CreateModelMixin,

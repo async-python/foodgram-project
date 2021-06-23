@@ -50,9 +50,6 @@ class RecipeView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['ingredients'] = self.object.recipe_ingredients.all()
-        if self.request.user.is_authenticated:
-            context['is_subscribe'] = SubscriptionUser.objects.filter(
-                user=self.request.user, author=self.object.author).exists()
         return context
 
 
@@ -108,6 +105,11 @@ class UserRecipeList(BaseListView):
                 tags__name__in=tags_values).distinct()
         return Recipe.objects.select_related('author').prefetch_related(
             'tags').filter(author=self.recipe_author)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['author'] = self.recipe_author
+        return context
 
 
 class UserFollowList(LoginRequiredMixin, BaseListView):

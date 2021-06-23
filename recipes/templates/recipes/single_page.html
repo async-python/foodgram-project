@@ -34,9 +34,11 @@
                         <li class="single-card__item"><button class="button button_style_light-blue" name="purchases"><span class="icon-check button__icon"></span> Рецепт добавлен</button></li>
                     {% endif %}
                     {% if request.user.is_authenticated %}
+                        {% with is_subscribe=request|get_subscribe:recipe.author %}
                         <li class="single-card__item">
                             <button class="button button_style_light-blue button_size_subscribe" name="subscribe"
                                     {% if not is_subscribe %}data-out{% endif %}>{% if not is_subscribe %}Подписаться на автора{% else %}Отписаться от автора{% endif %}</button></li>
+                        {% endwith %}
                     {% endif %}
                 </ul>
                 <div class="single-card__section">

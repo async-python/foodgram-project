@@ -1,7 +1,7 @@
 from django import template
 
 from api.utils import get_session_key
-from recipes.models import Recipe, Tag
+from recipes.models import Recipe, SubscriptionUser, Tag
 
 register = template.Library()
 
@@ -47,6 +47,12 @@ def get_shopping_list(request):
         return Recipe.objects.filter(shopping_list__user=request.user)
     return Recipe.objects.filter(
         shopping_list_session__session_id=get_session_key(request))
+
+
+@register.filter(name='get_subscribe')
+def get_subscribe(request, author):
+    return SubscriptionUser.objects.filter(
+        user=request.user, author=author).exists()
 
 
 @register.filter
