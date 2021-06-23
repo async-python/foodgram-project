@@ -93,7 +93,7 @@ class RecipeDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('index')
 
 
-class UserRecipeList(LoginRequiredMixin, BaseListView):
+class UserRecipeList(BaseListView):
     template_name = 'recipes/author_recipe.html'
     context_object_name = 'recipe_list'
 
@@ -136,7 +136,7 @@ class UserFavoritesList(LoginRequiredMixin, BaseListView):
             favorite_recipe__user=self.request.user)
 
 
-class UserPurchasesList(BaseListView):
+class UserPurchasesList(ListView):
     template_name = 'recipes/purchases.html'
     context_object_name = 'purchases'
 

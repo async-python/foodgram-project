@@ -1,7 +1,9 @@
+from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
                                    ListModelMixin)
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from api.permissions import IsOwnerOrAdmin
@@ -44,6 +46,11 @@ class SubscribeCreateDeleteView(BaseCreateDeleteView):
 
 class FavoritesCreateDeleteView(BaseCreateDeleteView):
     serializer_class = FavoriteSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        success = instance.delete()
+        return Response({'success': bool(success)}, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
         recipe = get_object_or_404(Recipe, pk=request.data.get('id'))
@@ -90,3 +97,8 @@ class PurchaseListCreateDeleteView(ListModelMixin, CreateModelMixin,
             ShoppingListSession,
             recipe_id=self.kwargs.get('pk'),
             session_id=get_session_key(self.request))
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        success = instance.delete()
+        return Response({'success': bool(success)}, status=status.HTTP_200_OK)
