@@ -9,7 +9,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 from api.utils import get_session_key
 from foodgram.settings import PAGINATOR_ITEMS_DISPLAY
 from recipes.forms import RecipeForm
-from recipes.models import Recipe, SubscriptionUser, User
+from recipes.models import Recipe, User
 
 from .services import get_list
 
