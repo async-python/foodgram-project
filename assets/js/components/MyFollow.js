@@ -14,5 +14,4 @@ class MyFollow extends MainCards{
             this.button.subscribe.removeSubscribe(target, authorId)
         }
     }
-
 }
