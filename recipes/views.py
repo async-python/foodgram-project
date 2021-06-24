@@ -9,7 +9,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 from api.utils import get_session_key
 from foodgram.settings import PAGINATOR_ITEMS_DISPLAY
 from recipes.forms import RecipeForm
-from recipes.models import Recipe, User
+from recipes.models import Recipe, SubscriptionUser, User
 
 from .services import get_list
 
@@ -120,6 +120,20 @@ class UserFollowList(LoginRequiredMixin, BaseListView):
         return User.objects.prefetch_related('recipes').filter(
             following__user=self.request.user).annotate(
             count=Count('recipes')).order_by('-count')
+
+
+class UserFollowDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = 'recipes/subscribe_confirm_delete.html'
+    context_object_name = 'subscription'
+    pk_url_kwarg = 'author_id'
+    query_pk_and_slug = True
+    success_url = reverse_lazy('follow')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            SubscriptionUser,
+            user=self.request.user,
+            author_id=self.kwargs.get('author_id'))
 
 
 class UserFavoritesList(LoginRequiredMixin, BaseListView):
