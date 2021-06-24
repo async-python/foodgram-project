@@ -9,6 +9,7 @@ __pycache__/
 # Static / Media
 media/*
 static/*
+assets/*
 # Distribution / packaging
 .Python
 build/
@@ -136,3 +137,5 @@ dmypy.json
 
 #Develop settings
 foodgram/settings_dev.py
+
+db.json
