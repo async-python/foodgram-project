@@ -23,14 +23,18 @@ class IngredientsViewSet(ListModelMixin, GenericViewSet):
     lookup_field = 'title'
 
 
+def get_success_response(self, request, *args, **kwargs):
+    instance = self.get_object()
+    success = instance.delete()
+    return Response({'success': bool(success)}, status=status.HTTP_200_OK)
+
+
 class BaseCreateDeleteView(CreateModelMixin,
                            DestroyModelMixin, GenericViewSet):
     permission_classes = (IsOwnerOrAdmin,)
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        success = instance.delete()
-        return Response({'success': bool(success)}, status=status.HTTP_200_OK)
+        return get_success_response(self, request, *args, **kwargs)
 
 
 class SubscribeCreateDeleteView(BaseCreateDeleteView):
@@ -104,6 +108,4 @@ class PurchaseListCreateDeleteView(ListModelMixin, CreateModelMixin,
             session_id=get_session_key(self.request))
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        success = instance.delete()
-        return Response({'success': bool(success)}, status=status.HTTP_200_OK)
+        return get_success_response(self, request, *args, **kwargs)
