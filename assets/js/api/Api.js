@@ -55,7 +55,6 @@ class Api {
     }
 
     addSubscriptions(id) {
-        debugger;
         return fetch(this.apiUrl + `subscriptions/`, {
             method: 'POST',
             headers: {

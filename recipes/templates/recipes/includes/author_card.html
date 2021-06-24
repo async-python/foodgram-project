@@ -1,3 +1,4 @@
+{% load recipe_filter %}
 {% load static %}
 <form method="post">
     <div class="card-user" data-author="{{ author.pk }}">
@@ -27,7 +28,7 @@
             </ul>
         </div>
         <div class="card-user__footer">
-            <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Отписаться</button>
+            <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
         </div>
     </div>
 </form>
