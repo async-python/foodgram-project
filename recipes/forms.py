@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.forms.widgets import CheckboxSelectMultiple
 
@@ -53,11 +54,21 @@ class RecipeForm(forms.ModelForm):
                 [
                     RecipeIngredient(
                         recipe=recipe_obj, ingredient=ingredient,
-                        amount=ingredients_amount[ingredient.title]
+                        amount=int(ingredients_amount[ingredient.title])
                     )
-                    for ingredient in self.cleaned_data['ingredients']
+                    for ingredient in self.cleaned_data.get('ingredients')
                 ],
                 bulk=False)
             self.amount = {}
             self.save_m2m()
             return recipe_obj
+
+    def clean_ingredients(self):
+        ingredients_amount = self.amount
+        ingredients = self.cleaned_data.get('ingredients')
+        for ingredient in ingredients:
+            amount = int(ingredients_amount[ingredient.title])
+            if amount < 1:
+                raise ValidationError(
+                    'The number of ingredients must be greater than 0')
+        return ingredients
