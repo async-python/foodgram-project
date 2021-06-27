@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
@@ -68,11 +68,9 @@ class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'recipes/form_recipe.html'
     form_class = RecipeForm
     pk_url_kwarg = 'recipe_id'
-    query_pk_and_slug = ('recipe_id', 'username')
 
     def get_queryset(self):
-        return Recipe.objects.select_related(
-            'author').prefetch_related('tags').filter(author=self.request.user)
+        return get_recipes_queryset(self)
 
     def get_success_url(self):
         return reverse(
@@ -86,8 +84,10 @@ class RecipeDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'recipes/recipe_confirm_delete.html'
     model = Recipe
     pk_url_kwarg = 'recipe_id'
-    query_pk_and_slug = ('recipe_id', 'username')
     success_url = reverse_lazy('index')
+
+    def get_queryset(self):
+        return get_recipes_queryset(self)
 
 
 class UserRecipeList(BaseListView):
@@ -167,3 +167,12 @@ def get_purchases(request):
     response = HttpResponse(get_list(request), content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename=purchases.txt'
     return response
+
+
+def get_recipes_queryset(obj):
+    if obj.request.user.username != obj.kwargs.get('username'):
+        raise Http404("The link seems to be broken")
+    return Recipe.objects.select_related(
+        'author').prefetch_related(
+        'tags', 'recipe_ingredients__ingredient').filter(
+        author=obj.request.user)
