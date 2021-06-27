@@ -19,6 +19,8 @@ INSTALLED_APPS = [
     'api',
     'recipes',
     'users',
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -139,3 +141,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 PAGINATOR_ITEMS_DISPLAY = 3
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
